@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Models;
+
+class Post 
+{
+   private static $blog_posts = [
+      [
+      "title"  => "NCT DREAM",
+      "slug"   => "judul-post-pertama",
+      "author" => "Zhong Chenle",
+      "body"   => "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consequuntur atque esse, excepturi repellendus vero, odio optio obcaecati ipsam fugit ipsa amet asperiores veritatis sequi voluptatum! Consequatur reiciendis, et quis nobis commodi ab vitae, soluta nesciunt accusantium adipisci aspernatur recusandae velit nam alias. A numquam officiis architecto vero, maiores dolorum expedita voluptatum doloribus voluptatem saepe eum facere. Corporis aliquam odit impedit quae at obcaecati, quam optio ipsum assumenda hic eveniet asperiores aspernatur, molestiae vel amet quisquam repudiandae modi ratione et quod?"
+      ],
+      [
+          "title"  => "Simon Says",
+          "slug"   => "judul-post-kedua",
+          "author" => "Kim Taeyong",
+          "body"   => "Lorem ipsum dolor s it amet consectetur adipisicing elit. Exercitationem illum ex animi obcaecati totam ab consequuntur voluptate, saepe ipsum iste, temporibus, molestias labore dolorem voluptates cupiditate dicta perspiciatis atque eveniet provident nostrum perferendis veniam laboriosam. Sapiente fugit harum doloribus ipsa sequi deserunt ab in enim nulla? Odio consectetur necessitatibus sint ea assumenda deleniti earum delectus fugiat illo soluta consequuntur sequi praesentium voluptas et illum cupiditate dolores, dolore accusantium quisquam aperiam voluptate voluptatibus. Placeat amet eius, optio eaque ad dicta recusandae asperiores iste culpa, debitis rerum, sint minus velit. Alias et, fuga rerum repellendus soluta est sequi sapiente sed nesciunt dolorem."
+      ],
+   ];
+// Mengambil Data
+public static function all()
+{
+   return collect(self::$blog_posts);
+}
+
+public static function find($slug)
+{
+   $posts = static::all();
+   return $posts->firstwhere('slug', $slug);
+
+}
+
+}
+
