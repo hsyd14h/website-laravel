@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Support\Str;
+use stdClass;
 
 class Post extends Model
 {
     use HasFactory;
+    use Sluggable;
 
    // protected $fillable = ['title', 'excerpt', 'body'];
    protected $guarded = ['id'];
@@ -28,7 +32,7 @@ class Post extends Model
                  $query->where('slug', $category);
          });
       });
-       // erro function
+       // error function
       $query->when($filters['author'] ?? false, fn($query, $author) =>
       $query->whereHas('author', fn($query) =>
          $query->where('username', $author)
@@ -44,6 +48,37 @@ class Post extends Model
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    public function sluggable():array
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
+    }
+
+    public static function create($request) {
+        $data = new Post();
+        $data->title = $request->title;
+        $data->slug  = $request->slug;
+        $data->category_id = $request->category_id;
+        $data->image = $request->file('image')->store('post-images');
+        $data->body    = $request->body;
+        $data->user_id = auth()->user()->id;
+        $data->excerpt = Str::limit(strip_tags($request->body), 200);
+
+        // session(['posts' => $data]);
+
+        $data->save();
+
+        return $data;
     }
 
 }

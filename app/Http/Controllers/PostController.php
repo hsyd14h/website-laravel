@@ -7,8 +7,30 @@ use App\Models\Post;
 use App\Models\Category;
 use App\Models\User;
 
+
 class PostController extends Controller
 {
+    public function  home ()
+    {
+        return view('home',[
+            "title" => "Home",
+            'active' => 'home'
+        ]);
+    }
+
+
+    public function  about ()
+     {
+        return view(' about', [
+            "title"=> "About",
+            'active' => 'about',
+            "name" => "Zhong Chenle",
+            "email"=> "chenlele@gmail.com",
+            "image"=> "lele.jpg"
+        ]);
+     }
+
+
     public function index()
     {
          $title ='';
@@ -27,6 +49,15 @@ class PostController extends Controller
             "posts" => Post::latest()->filter(request(['search','category', 'author' ]))
             ->paginate(7)->withQueryString()
            
+        ]);
+    }
+
+    public function categories()
+     {
+        return view('categories', [
+            'title' => 'Post Categories',
+            'active' => 'categories',
+            'categories' => Category::all()
         ]);
     }
 

@@ -1,13 +1,12 @@
 <?php
 
 
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
-
-use App\Models\Category;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminCategoryController;
 
 
 
@@ -22,40 +21,29 @@ use App\Models\Category;
 |
 */
 
-Route::get('/', function () {
-    return view('home',[
-        "title" => "Home",
-        'active' => 'home'
-    ]);
-});
-
-Route::get('/about', function () {
-    return view(' about', [
-        "title"=> "About",
-        'active' => 'about',
-        "name" => "Zhong Chenle",
-        "email"=> "chenlele@gmail.com",
-        "image"=> "lele.jpg"
-    ]);
-});
-
-
-
+Route::get('/',[PostController::class, 'home'] );
+Route::get('/about', [PostController::class, 'about'] );
 Route::get('/blog',[PostController::class, 'index'] );
 Route::get('posts/{post:slug}',[PostController::class, 'show'] );
-
-Route::get('/categories', function() {
-    return view('categories', [
-        'title' => 'Post Categories',
-        'active' => 'categories',
-        'categories' => Category::all()
-    ]);
-
-});
+Route::get('/categories', [PostController::class, 'categories'] );
 
 
+Route::get('/login', [LoginController::class, 'index'])->middleware('guest');
+Route::post('/login', [LoginController::class, 'authenticate']);
+Route::post('/logout', [LoginController::class, 'logout']);
 
-Route::get('/login', [LoginController::class, 'index']);
-
-Route::get('/register', [RegisterController::class, 'index']);
+Route::get('/register', [RegisterController::class, 'index'])->middleware('guest');
 Route::post('/register', [RegisterController::class, 'store']);
+
+Route::get('/dashboard', function() {
+    return view('dashboard.index');
+})->middleware('auth');
+
+Route::get('dashboard/posts/checkSlug', [DashboardController::class, 'checkSlug'])
+->middleware('auth');
+Route::resource('/dashboard/posts', DashboardController::class)->middleware('auth');
+
+//postcategories
+Route::resource('/dashboard/categories', AdminCategoryController::class)->except('show')
+->middleware('admin');   
+                
